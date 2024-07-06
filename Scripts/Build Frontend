@@ -1,0 +1,2 @@
+1. sudo docker build -t macnaer/frontend .
+2. sudo docker run -d --restart=always -p 80:80 macnaer/frontend
