@@ -1,0 +1,4 @@
+1. sudo mkdir /opt/mssql
+2. sudo chmod 777 /opt/mssql/
+3. sudo docker run -v /opt/mssql:/var/opt/mssql -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Qwerty-1" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+4. sudo docker ps
