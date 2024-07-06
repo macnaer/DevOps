@@ -1,3 +1,7 @@
 1. BackEnd/Amazon-clone/ShopApi/appsettings.json
 В строці  "DefaultConnection": "Server=20.240.61.200,1433;Database=asdd;User Id=sa;Password=Qwerty-1;" замінити IP адресу серверу
+2. В Dockerfile змінити в строці RUN dotnet tool install -g dotnet-ef змінити на 
+RUN dotnet tool install -g dotnet-ef  --version 6.0.6
+
+
   
