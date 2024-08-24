@@ -8,4 +8,5 @@ Authenticationation no
 Client configuration
 1. ssh-keygen -t rsa -b 4096
 2. ssh-copy-id -i ~/.ssh/id_rsa master@server_ip
+3. Скопіювати публічний ключ в .ssh/authorized_keys
 3. Перевірка: ssh server_ip
