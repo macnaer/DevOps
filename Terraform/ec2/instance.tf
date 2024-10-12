@@ -1,6 +1,6 @@
 // Provider
 provider "aws" {
-  region     = "eu-north-1"
+  region     = var.region
   access_key = var.aws_access_key
   secret_key = var.aws_secret_key
 }
@@ -22,6 +22,7 @@ resource "aws_instance" "EC2-Instance" {
     }
   }
 }
+
 
 // Create security group
 resource "aws_security_group" "DefaultTerraformSG" {
