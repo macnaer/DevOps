@@ -16,11 +16,14 @@ resource "aws_instance" "EC2-Instance" {
   // Create main disk
   ebs_block_device {
     device_name = "/dev/sda1"
-    volume_size = 10
+    volume_size = 12
     tags = {
       "name" = "root disk"
     }
   }
+
+    // User script
+  user_data = file("files/install.sh")
 }
 
 
