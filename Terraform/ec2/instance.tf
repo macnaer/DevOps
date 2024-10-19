@@ -9,57 +9,56 @@ provider "aws" {
 resource "aws_instance" "EC2-Instance" {
   availability_zone      = "eu-north-1a"
   ami                    = "ami-08eb150f611ca277f"
-  instance_type          = "t3.micro"
+  instance_type          = "t3.medium"
   key_name               = "Stockholm_2"
   vpc_security_group_ids = [aws_security_group.DefaultTerraformSG.id]
 
   // Create main disk
   ebs_block_device {
     device_name = "/dev/sda1"
-    volume_size = 12
+    volume_size = 15
     tags = {
       "name" = "root disk"
     }
   }
 
-    // User script
-  user_data = file("files/install.sh")
+  tags = {
+    Name = "Jenkins"
+  }
+
+  // User script
+  user_data = file("files/install_jenkins.sh")
 }
 
 
 // Create security group
 resource "aws_security_group" "DefaultTerraformSG" {
   name        = "DefaultTerraformSG"
-  description = "Allow 22, 80, 443 inbound taffic"
+  description = "Allow 22, 80, 443 inbound traffic"
+}
 
-  ingress {
-    description = "Allow HTTPS"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+// Define the ingress rules
+resource "aws_security_group_rule" "ingress_rules" {
+  for_each = {
+    "http" = { from_port = 8080, to_port = 8080, description = "Allow HTTP" }
+    "ssh"  = { from_port = 22, to_port = 22, description = "Allow SSH" }
   }
 
-  ingress {
-    description = "Allow HTTP"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  type              = "ingress"
+  from_port         = each.value.from_port
+  to_port           = each.value.to_port
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.DefaultTerraformSG.id
+  description       = each.value.description
+}
 
-  ingress {
-    description = "Allow SSH"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+// Define the egress rule
+resource "aws_security_group_rule" "egress_rule" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.DefaultTerraformSG.id
 }
